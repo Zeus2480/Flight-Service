@@ -41,13 +41,33 @@ class CrudRepository {
     return response;
   }
   async update(id, data) {
-    // data-> should be an object {col:value, ...}
-    const response = await this.model.update(data, {
+    const [affectedRows] = await this.model.update(data, {
       where: {
         id: id,
       },
     });
-    return response;
+
+    if (affectedRows === 0) {
+      throw new AppError(
+        "Not able to find the resource you requested",
+        StatusCodes.NOT_FOUND
+      );
+    }
+
+    const updatedRow = await this.model.findOne({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!updatedRow) {
+      throw new AppError(
+        "Failed to retrieve the updated resource",
+        StatusCodes.NOT_FOUND
+      );
+    }
+
+    return updatedRow;
   }
 }
 
