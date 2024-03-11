@@ -8,6 +8,7 @@ class CrudRepository {
   }
 
   async create(data) {
+    console.log(data);
     const response = await this.model.create(data);
     return response;
   }
@@ -37,7 +38,9 @@ class CrudRepository {
   }
 
   async getAll() {
+    console.log(3);
     const response = await this.model.findAll();
+    console.log(response);
     return response;
   }
   async update(id, data) {
